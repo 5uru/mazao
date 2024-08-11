@@ -88,3 +88,10 @@ Mazao  is an agritech application designed to assist African farmers with crop m
 
 - [ ] Integration with IoT Devices: Connect with smart farming devices like soil sensors and automated irrigation systems for more precise data collection and farm management.
 
+
+# Datasets
+- https://www.kaggle.com/datasets/alinedobrovsky/plant-disease-classification-merged-dataset
+- https://www.kaggle.com/datasets/santoshshaha/lettuce-plant-disease-dataset
+- https://www.kaggle.com/datasets/nirmalsankalana/plant-diseases-training-dataset
+
+- https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
