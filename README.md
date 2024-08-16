@@ -14,7 +14,7 @@ Mazao is an agritech application designed to assist African farmers with crop ma
   - [ ] Treatment recommendations for identified diseases
 
   Description: Enables farmers to quickly identify plant diseases by taking photos with their smartphones. The AI analyzes the images, compares them against a comprehensive disease database, and provides accurate diagnoses along with treatment recommendations.
- 
+
 - Fiche technique des cultures
 - [ ] Weather Forecasting
 
