@@ -11,7 +11,7 @@ class Plant:
 def _estimate_light_level(condition):
     """
 
-    :param condition: 
+    :param condition:
 
     """
     sunny_conditions = ["Sunny", "Clear"]
@@ -31,7 +31,7 @@ def _estimate_light_level(condition):
 def process_forecast(forecast_data):
     """
 
-    :param forecast_data: 
+    :param forecast_data:
 
     """
     return [
@@ -54,8 +54,8 @@ class WeatherForecast:
     def get_forecast(self, latitude, longitude, days=3):
         """
 
-        :param latitude: 
-        :param longitude: 
+        :param latitude:
+        :param longitude:
         :param days:  (Default value = 3)
 
         """
@@ -73,9 +73,9 @@ class WeatherForecast:
 def _calculate_water_amount(temperature, humidity, light_level):
     """
 
-    :param temperature: 
-    :param humidity: 
-    :param light_level: 
+    :param temperature:
+    :param humidity:
+    :param light_level:
 
     """
     base_amount = 250  # ml
@@ -98,8 +98,8 @@ def _calculate_water_amount(temperature, humidity, light_level):
 def _determine_best_time(temperature, light_level):
     """
 
-    :param temperature: 
-    :param light_level: 
+    :param temperature:
+    :param light_level:
 
     """
     if temperature > 30 or light_level > 80:
@@ -113,9 +113,9 @@ def _determine_best_time(temperature, light_level):
 def _get_special_instructions(temperature, humidity, light_level):
     """
 
-    :param temperature: 
-    :param humidity: 
-    :param light_level: 
+    :param temperature:
+    :param humidity:
+    :param light_level:
 
     """
     instructions = []
@@ -133,10 +133,10 @@ def _get_special_instructions(temperature, humidity, light_level):
 def _adjust_frequency(original_frequency, temperature, humidity, light_level):
     """
 
-    :param original_frequency: 
-    :param temperature: 
-    :param humidity: 
-    :param light_level: 
+    :param original_frequency:
+    :param temperature:
+    :param humidity:
+    :param light_level:
 
     """
     adjustment = 0
@@ -164,8 +164,8 @@ class AIWateringPlanner:
     def generate_watering_plan(self, current_conditions, forecast):
         """
 
-        :param current_conditions: 
-        :param forecast: 
+        :param current_conditions:
+        :param forecast:
 
         """
         print(
@@ -216,11 +216,11 @@ def generate_detailed_watering_plan(
 ):
     """
 
-    :param plant_name: 
-    :param water_frequency: 
-    :param latitude: 
-    :param longitude: 
-    :param api_key: 
+    :param plant_name:
+    :param water_frequency:
+    :param latitude:
+    :param longitude:
+    :param api_key:
 
     """
     plant = Plant(plant_name, water_frequency)
