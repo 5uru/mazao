@@ -3,6 +3,7 @@ import requests
 
 class Plant:
     """ """
+
     def __init__(self, name, water_frequency):
         self.name = name
         self.water_frequency = water_frequency  # in days
@@ -34,19 +35,21 @@ def process_forecast(forecast_data):
     :param forecast_data:
 
     """
-    return [
-        {
-            "date": day["date"],
-            "temp_c": day["day"]["avgtemp_c"],
-            "humidity": day["day"]["avghumidity"],
-            "light_level": _estimate_light_level(day["day"]["condition"]["text"]),
-        }
-        for day in forecast_data["forecast"]["forecastday"]
-    ]
+    return [{
+        "date":
+        day["date"],
+        "temp_c":
+        day["day"]["avgtemp_c"],
+        "humidity":
+        day["day"]["avghumidity"],
+        "light_level":
+        _estimate_light_level(day["day"]["condition"]["text"]),
+    } for day in forecast_data["forecast"]["forecastday"]]
 
 
 class WeatherForecast:
     """ """
+
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = "https://api.weatherapi.com/v1/forecast.json"
@@ -59,7 +62,11 @@ class WeatherForecast:
         :param days:  (Default value = 3)
 
         """
-        params = {"key": self.api_key, "q": f"{latitude},{longitude}", "days": days}
+        params = {
+            "key": self.api_key,
+            "q": f"{latitude},{longitude}",
+            "days": days
+        }
         response = requests.get(self.base_url, params=params)
         if response.status_code == 200:
             return response.json()
@@ -158,6 +165,7 @@ def _adjust_frequency(original_frequency, temperature, humidity, light_level):
 
 class AIWateringPlanner:
     """ """
+
     def __init__(self, plant):
         self.plant = plant
 
@@ -171,8 +179,7 @@ class AIWateringPlanner:
         print(
             f"Current conditions: Temp: {current_conditions['temp_c']:.1f}°C, "
             f"Humidity: {current_conditions['humidity']:.1f}%, "
-            f"Light: {current_conditions['light_level']:.1f}%"
-        )
+            f"Light: {current_conditions['light_level']:.1f}%")
 
         plan = {
             "plant_name": self.plant.name,
@@ -188,19 +195,23 @@ class AIWateringPlanner:
                 conditions["humidity"],
                 conditions["light_level"],
             )
-            water_amount = _calculate_water_amount(
-                conditions["temp_c"], conditions["humidity"], conditions["light_level"]
-            )
-            best_time = _determine_best_time(
-                conditions["temp_c"], conditions["light_level"]
-            )
+            water_amount = _calculate_water_amount(conditions["temp_c"],
+                                                   conditions["humidity"],
+                                                   conditions["light_level"])
+            best_time = _determine_best_time(conditions["temp_c"],
+                                             conditions["light_level"])
 
             daily_plan = {
-                "date": conditions.get("date", "Today"),
-                "adjusted_frequency": adjusted_frequency,
-                "water_amount": water_amount,
-                "best_time": best_time,
-                "special_instructions": _get_special_instructions(
+                "date":
+                conditions.get("date", "Today"),
+                "adjusted_frequency":
+                adjusted_frequency,
+                "water_amount":
+                water_amount,
+                "best_time":
+                best_time,
+                "special_instructions":
+                _get_special_instructions(
                     conditions["temp_c"],
                     conditions["humidity"],
                     conditions["light_level"],
@@ -211,9 +222,8 @@ class AIWateringPlanner:
         return plan
 
 
-def generate_detailed_watering_plan(
-    plant_name, water_frequency, latitude, longitude, api_key
-):
+def generate_detailed_watering_plan(plant_name, water_frequency, latitude,
+                                    longitude, api_key):
     """
 
     :param plant_name:
@@ -231,16 +241,16 @@ def generate_detailed_watering_plan(
     processed_forecast = process_forecast(forecast_data)
 
     current_conditions = {
-        "temp_c": forecast_data["current"]["temp_c"],
-        "humidity": forecast_data["current"]["humidity"],
-        "light_level": _estimate_light_level(
-            forecast_data["current"]["condition"]["text"]
-        ),
+        "temp_c":
+        forecast_data["current"]["temp_c"],
+        "humidity":
+        forecast_data["current"]["humidity"],
+        "light_level":
+        _estimate_light_level(forecast_data["current"]["condition"]["text"]),
     }
 
-    watering_plan = planner.generate_watering_plan(
-        current_conditions, processed_forecast
-    )
+    watering_plan = planner.generate_watering_plan(current_conditions,
+                                                   processed_forecast)
 
     print("\nDetailed Watering Plan:")
     print(f"Plant: {watering_plan['plant_name']}")
