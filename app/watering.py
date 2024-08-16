@@ -40,7 +40,8 @@ class WeatherForecast:
         self.base_url = "https://api.weatherapi.com/v1/forecast.json"
 
     def get_forecast(self, latitude, longitude, days=3):
-        params = {"key": self.api_key, "q": f"{latitude},{longitude}", "days": days}
+        params = {"key": self.api_key,
+                  "q": f"{latitude},{longitude}", "days": days}
         response = requests.get(self.base_url, params=params)
         if response.status_code == 200:
             return response.json()
