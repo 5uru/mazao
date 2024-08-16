@@ -2,12 +2,18 @@ import requests
 
 
 class Plant:
+    """ """
     def __init__(self, name, water_frequency):
         self.name = name
         self.water_frequency = water_frequency  # in days
 
 
 def _estimate_light_level(condition):
+    """
+
+    :param condition: 
+
+    """
     sunny_conditions = ["Sunny", "Clear"]
     partly_cloudy_conditions = ["Partly cloudy"]
     cloudy_conditions = ["Cloudy", "Overcast"]
@@ -23,6 +29,11 @@ def _estimate_light_level(condition):
 
 
 def process_forecast(forecast_data):
+    """
+
+    :param forecast_data: 
+
+    """
     return [
         {
             "date": day["date"],
@@ -35,11 +46,19 @@ def process_forecast(forecast_data):
 
 
 class WeatherForecast:
+    """ """
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = "https://api.weatherapi.com/v1/forecast.json"
 
     def get_forecast(self, latitude, longitude, days=3):
+        """
+
+        :param latitude: 
+        :param longitude: 
+        :param days:  (Default value = 3)
+
+        """
         params = {"key": self.api_key, "q": f"{latitude},{longitude}", "days": days}
         response = requests.get(self.base_url, params=params)
         if response.status_code == 200:
@@ -52,6 +71,13 @@ class WeatherForecast:
 
 
 def _calculate_water_amount(temperature, humidity, light_level):
+    """
+
+    :param temperature: 
+    :param humidity: 
+    :param light_level: 
+
+    """
     base_amount = 250  # ml
     if temperature > 30:
         base_amount *= 1.2
@@ -70,6 +96,12 @@ def _calculate_water_amount(temperature, humidity, light_level):
 
 
 def _determine_best_time(temperature, light_level):
+    """
+
+    :param temperature: 
+    :param light_level: 
+
+    """
     if temperature > 30 or light_level > 80:
         return "Early morning or late evening"
     elif temperature < 20 or light_level < 20:
@@ -79,6 +111,13 @@ def _determine_best_time(temperature, light_level):
 
 
 def _get_special_instructions(temperature, humidity, light_level):
+    """
+
+    :param temperature: 
+    :param humidity: 
+    :param light_level: 
+
+    """
     instructions = []
     if temperature > 35:
         instructions.append("Consider misting the leaves to cool the plant")
@@ -92,6 +131,14 @@ def _get_special_instructions(temperature, humidity, light_level):
 
 
 def _adjust_frequency(original_frequency, temperature, humidity, light_level):
+    """
+
+    :param original_frequency: 
+    :param temperature: 
+    :param humidity: 
+    :param light_level: 
+
+    """
     adjustment = 0
     if temperature > 30:
         adjustment -= 1
@@ -110,10 +157,17 @@ def _adjust_frequency(original_frequency, temperature, humidity, light_level):
 
 
 class AIWateringPlanner:
+    """ """
     def __init__(self, plant):
         self.plant = plant
 
     def generate_watering_plan(self, current_conditions, forecast):
+        """
+
+        :param current_conditions: 
+        :param forecast: 
+
+        """
         print(
             f"Current conditions: Temp: {current_conditions['temp_c']:.1f}°C, "
             f"Humidity: {current_conditions['humidity']:.1f}%, "
@@ -160,6 +214,15 @@ class AIWateringPlanner:
 def generate_detailed_watering_plan(
     plant_name, water_frequency, latitude, longitude, api_key
 ):
+    """
+
+    :param plant_name: 
+    :param water_frequency: 
+    :param latitude: 
+    :param longitude: 
+    :param api_key: 
+
+    """
     plant = Plant(plant_name, water_frequency)
     planner = AIWateringPlanner(plant)
     weather = WeatherForecast(api_key)
