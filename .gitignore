@@ -162,3 +162,4 @@ cython_debug/
 .idea/
 models/
 notebooks/
+/notebooks/train_model.ipynb
