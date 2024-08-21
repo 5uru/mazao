@@ -46,11 +46,25 @@ st.set_page_config(
 def get_zone_data(
     zone_id: int, zone_name: str, crop_type: str, longitude: float, latitude: float
 ):
+    """
+
+    :param zone_id: int: 
+    :param zone_name: str: 
+    :param crop_type: str: 
+    :param longitude: float: 
+    :param latitude: float: 
+
+    """
     return zone_id, zone_name, crop_type, longitude, latitude
 
 
 @st.cache_data
 def get_weather_data(city: str):
+    """
+
+    :param city: str: 
+
+    """
     return get_weather(city)
 
 
@@ -64,6 +78,7 @@ if "watering_plan" not in st.session_state:
 
 @st.dialog("Créer une nouvelle zone de gestion", width="large")
 def new_zone():
+    """ """
     name = st.text_input("Nom")
     crop_type = st.selectbox(
         "Type de culture", ["Maïs", "Tomate", "Piment", "Pomme de terre"]
@@ -87,6 +102,7 @@ def new_zone():
 
 @st.dialog("Ajouter un événement", width="large")
 def add_new_event():
+    """ """
     name = st.text_input("Nom")
     date = st.date_input("Date")
     time = st.time_input("Heure")
@@ -111,6 +127,7 @@ def add_new_event():
 
 @st.dialog("Analyser une image", width="large")
 def analyze_image():
+    """ """
     if not (img_path := st.file_uploader("Sélectionnez une image")):
         return
     st.image(img_path, caption="Image sélectionnée", use_column_width=True)

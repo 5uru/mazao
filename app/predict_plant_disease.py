@@ -51,12 +51,23 @@ CLASS_NAMES = [
 
 # base class for the model
 class ImageClassificationBase(nn.Module):
+    """ """
     def training_step(self, batch):
+        """
+
+        :param batch: 
+
+        """
         images, labels = batch
         out = self(images)  # Generate predictions
         return F.cross_entropy(out, labels)
 
     def validation_epoch_end(self, outputs):
+        """
+
+        :param outputs: 
+
+        """
         batch_losses = [x["val_loss"] for x in outputs]
         batch_accuracy = [x["val_accuracy"] for x in outputs]
         epoch_loss = torch.stack(batch_losses).mean()  # Combine loss
@@ -67,6 +78,12 @@ class ImageClassificationBase(nn.Module):
         }  # Combine accuracies
 
     def epoch_end(self, epoch, result):
+        """
+
+        :param epoch: 
+        :param result: 
+
+        """
         print(
             "Epoch [{}], last_lr: {:.5f}, train_loss: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f}".format(
                 epoch,
@@ -83,6 +100,13 @@ class ImageClassificationBase(nn.Module):
 
 # convolution block with BatchNormalization
 def ConvBlock(in_channels, out_channels, pool=False):
+    """
+
+    :param in_channels: 
+    :param out_channels: 
+    :param pool:  (Default value = False)
+
+    """
     layers = [
         nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
         nn.BatchNorm2d(out_channels),
@@ -95,6 +119,7 @@ def ConvBlock(in_channels, out_channels, pool=False):
 
 # resnet architecture
 class ResNet9(ImageClassificationBase):
+    """ """
     def __init__(self, in_channels, num_diseases):
         super().__init__()
 
@@ -111,6 +136,11 @@ class ResNet9(ImageClassificationBase):
         )
 
     def forward(self, xb):  # xb is the loaded batch
+        """
+
+        :param xb: 
+
+        """
         out = self.conv1(xb)
         out = self.conv2(out)
         out = self.res1(out) + out
@@ -122,6 +152,13 @@ class ResNet9(ImageClassificationBase):
 
 
 def load_model(model_class, path, num_classes):
+    """
+
+    :param model_class: 
+    :param path: 
+    :param num_classes: 
+
+    """
     # Determine the device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -142,6 +179,11 @@ def load_model(model_class, path, num_classes):
 
 
 def predict(image_path):
+    """
+
+    :param image_path: 
+
+    """
     model = load_model(ResNet9, PATH, NUM_CLASSES)
     # Load and preprocess the image
     image = Image.open(image_path)
