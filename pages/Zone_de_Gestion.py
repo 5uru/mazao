@@ -45,9 +45,8 @@ st.set_page_config(
 
 
 @st.cache_data
-def get_zone_data(
-    zone_id: int, zone_name: str, crop_type: str, longitude: float, latitude: float
-):
+def get_zone_data(zone_id: int, zone_name: str, crop_type: str,
+                  longitude: float, latitude: float):
     """
 
     :param zone_id: int:
@@ -82,13 +81,13 @@ if "watering_plan" not in st.session_state:
 def new_zone():
     """ """
     name = st.text_input("Nom")
-    crop_type = st.selectbox(
-        "Type de culture", ["Maïs", "Tomate", "Piment", "Pomme de terre"]
-    )
+    crop_type = st.selectbox("Type de culture",
+                             ["Maïs", "Tomate", "Piment", "Pomme de terre"])
     st.write("Localisation")
     loc1, loc2 = st.columns([8, 2])
     with loc1:
-        st.write("Cliquez sur le bouton pour obtenir votre localisation actuelle:")
+        st.write(
+            "Cliquez sur le bouton pour obtenir votre localisation actuelle:")
     with loc2:
         location = streamlit_geolocation()
     loc_longitude, loc_latitude = 0, 0
@@ -182,14 +181,12 @@ with col2:
     if st.session_state.current_zone:
         zone = st.session_state.current_zone
         zone_id, zone_name, crop_type, longitude, latitude = get_zone_data(
-            zone.id, zone.name, zone.crop_type, zone.longitude, zone.latitude
-        )
+            zone.id, zone.name, zone.crop_type, zone.longitude, zone.latitude)
 
         st.write(f"# {zone_name}")
 
         temp, humidity, _ = get_weather_data(
-            f"{latitude},{longitude}"
-        )  # Use zone's location
+            f"{latitude},{longitude}")  # Use zone's location
 
         col_temp, col_humidity = st.columns(2, gap="small")
         col_temp.metric("Temperature (°C)", temp)
@@ -205,23 +202,25 @@ with col2:
                 analyze_image()
         calendar_events = []
         for event in get_events_by_zone(zone_id):
-            event_date = (
-                datetime.datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
-                if isinstance(event.date, str)
-                else event.date
-            )
-            calendar_events.append(
-                {
-                    "title": f" {event.name} :  {event.description}",
-                    "start": event_date.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "backgroundColor": event.type,
-                }
-            )
+            event_date = (datetime.datetime.strptime(
+                event.date, "%Y-%m-%d %H:%M:%S") if isinstance(
+                    event.date, str) else event.date)
+            calendar_events.append({
+                "title":
+                f" {event.name} :  {event.description}",
+                "start":
+                event_date.strftime("%Y-%m-%dT%H:%M:%S"),
+                "backgroundColor":
+                event.type,
+            })
 
         calendar = calendar(
             events=calendar_events,
             custom_css=custom_css,
-            options={"initialView": "listWeek", "locale": "fr"},
+            options={
+                "initialView": "listWeek",
+                "locale": "fr"
+            },
         )
 
         if st.button("Generer une nouvelle planification"):
@@ -247,17 +246,18 @@ with col2:
                     st.write(watering_event["description"])
 
             if st.button("Ajouter à l'agenda"):
-                for daily_plan in st.session_state.watering_plan["daily_plans"]:
+                for daily_plan in st.session_state.watering_plan[
+                        "daily_plans"]:
 
-                    date = datetime.datetime.strptime(daily_plan["date"], "%Y-%m-%d")
+                    date = datetime.datetime.strptime(daily_plan["date"],
+                                                      "%Y-%m-%d")
                     for watering_event in daily_plan["watering_schedule"]:
                         add_event(
                             name="Arrosage",
                             date=datetime.datetime.combine(
                                 date,
                                 datetime.datetime.strptime(
-                                    watering_event["time"], "%H:%M"
-                                ).time(),
+                                    watering_event["time"], "%H:%M").time(),
                             ),
                             event_type="green",
                             management_zone_id=zone_id,

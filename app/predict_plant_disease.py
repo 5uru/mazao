@@ -52,6 +52,7 @@ CLASS_NAMES = [
 # base class for the model
 class ImageClassificationBase(nn.Module):
     """ """
+
     def training_step(self, batch):
         """
 
@@ -85,14 +86,14 @@ class ImageClassificationBase(nn.Module):
 
         """
         print(
-            "Epoch [{}], last_lr: {:.5f}, train_loss: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f}".format(
+            "Epoch [{}], last_lr: {:.5f}, train_loss: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f}"
+            .format(
                 epoch,
                 result["lrs"][-1],
                 result["train_loss"],
                 result["val_loss"],
                 result["val_accuracy"],
-            )
-        )
+            ))
 
 
 # Architecture for training
@@ -120,6 +121,7 @@ def ConvBlock(in_channels, out_channels, pool=False):
 # resnet architecture
 class ResNet9(ImageClassificationBase):
     """ """
+
     def __init__(self, in_channels, num_diseases):
         super().__init__()
 
@@ -131,9 +133,8 @@ class ResNet9(ImageClassificationBase):
         self.conv4 = ConvBlock(256, 512, pool=True)  # out_dim : 512 x 4 x 44
         self.res2 = nn.Sequential(ConvBlock(512, 512), ConvBlock(512, 512))
 
-        self.classifier = nn.Sequential(
-            nn.MaxPool2d(4), nn.Flatten(), nn.Linear(512, num_diseases)
-        )
+        self.classifier = nn.Sequential(nn.MaxPool2d(4), nn.Flatten(),
+                                        nn.Linear(512, num_diseases))
 
     def forward(self, xb):  # xb is the loaded batch
         """
@@ -188,8 +189,8 @@ def predict(image_path):
     # Load and preprocess the image
     image = Image.open(image_path)
     transform = transforms.Compose(
-        [transforms.Resize((256, 256)), transforms.ToTensor()]
-    )
+        [transforms.Resize((256, 256)),
+         transforms.ToTensor()])
     image = transform(image).unsqueeze(0)
 
     # Determine the device
