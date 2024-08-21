@@ -1,199 +1,213 @@
 import requests
+from dataclasses import dataclass
+from typing import List, Dict, Any
+from enum import Enum
+from datetime import datetime, timedelta
 
+class WeatherCondition(Enum):
+    SUNNY = 80
+    PARTLY_CLOUDY = 60
+    CLOUDY = 40
+    DEFAULT = 50
 
+@dataclass
 class Plant:
-    def __init__(self, name, water_frequency):
-        self.name = name
-        self.water_frequency = water_frequency  # in days
+    name: str
+    water_frequency: int  # in days
+    base_water_amount: int  # in ml
 
+@dataclass
+class HourlyWeatherData:
+    datetime: datetime
+    temp_c: float
+    humidity: float
+    light_level: int
 
-def _estimate_light_level(condition):
-    sunny_conditions = ["Sunny", "Clear"]
-    partly_cloudy_conditions = ["Partly cloudy"]
-    cloudy_conditions = ["Cloudy", "Overcast"]
-
-    if any(cond in condition for cond in sunny_conditions):
-        return 80
-    elif any(cond in condition for cond in partly_cloudy_conditions):
-        return 60
-    elif any(cond in condition for cond in cloudy_conditions):
-        return 40
-    else:
-        return 50  # Default value for other conditions
-
-
-def process_forecast(forecast_data):
-    return [
-        {
-            "date": day["date"],
-            "temp_c": day["day"]["avgtemp_c"],
-            "humidity": day["day"]["avghumidity"],
-            "light_level": _estimate_light_level(day["day"]["condition"]["text"]),
-        }
-        for day in forecast_data["forecast"]["forecastday"]
-    ]
-
+@dataclass
+class DailyWeatherData:
+    date: str
+    hourly_data: List[HourlyWeatherData]
 
 class WeatherForecast:
-    def __init__(self, api_key):
-        self.api_key = api_key
-        self.base_url = "https://api.weatherapi.com/v1/forecast.json"
+    BASE_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
-    def get_forecast(self, latitude, longitude, days=3):
-        params = {"key": self.api_key, "q": f"{latitude},{longitude}", "days": days}
-        response = requests.get(self.base_url, params=params)
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+
+    def get_forecast(self, latitude: float, longitude: float, days: int = 5, units: str = "metric", lang: str = "en") -> Dict[str, Any]:
+        params = {
+                "lat": latitude,
+                "lon": longitude,
+                "appid": self.api_key,
+                "units": units,
+                "lang": lang,
+                "cnt": days * 8  # 3-hour intervals, 8 times per day
+        }
+
+        response = requests.get(self.BASE_URL, params=params)
+
         if response.status_code == 200:
             return response.json()
         else:
-            # sourcery skip: raise-specific-error
-            raise Exception(
-                f"Failed to fetch weather data: {response.status_code} - {response.text}"
-            )
+            raise ValueError(f"Failed to fetch weather data: {response.status_code} - {response.text}")
 
+def estimate_light_level(condition: str) -> int:
+    condition_map = {
+            "Clear": WeatherCondition.SUNNY,
+            "Few clouds": WeatherCondition.PARTLY_CLOUDY,
+            "Scattered clouds": WeatherCondition.PARTLY_CLOUDY,
+            "Broken clouds": WeatherCondition.CLOUDY,
+            "Overcast clouds": WeatherCondition.CLOUDY,
+    }
+    return condition_map.get(condition, WeatherCondition.DEFAULT).value
 
-def _calculate_water_amount(temperature, humidity, light_level):
-    base_amount = 250  # ml
-    if temperature > 30:
-        base_amount *= 1.2
-    elif temperature < 20:
-        base_amount *= 0.8
-    if humidity < 40:
-        base_amount *= 1.1
-    elif humidity > 70:
-        base_amount *= 0.9
-    if light_level > 80:
-        base_amount *= 1.1
-    elif light_level < 20:
-        base_amount *= 0.9
-
-    return round(base_amount)
-
-
-def _determine_best_time(temperature, light_level):
-    if temperature > 30 or light_level > 80:
-        return "Early morning or late evening"
-    elif temperature < 20 or light_level < 20:
-        return "Midday"
-    else:
-        return "Any time of day"
-
-
-def _get_special_instructions(temperature, humidity, light_level):
-    instructions = []
-    if temperature > 35:
-        instructions.append("Consider misting the leaves to cool the plant")
-    if humidity < 30:
-        instructions.append("Place a humidity tray near the plant")
-    if light_level > 90:
-        instructions.append("Provide some shade during peak sunlight hours")
-    if light_level < 10:
-        instructions.append("Consider supplemental grow lights")
-    return instructions or ["No special instructions"]
-
-
-def _adjust_frequency(original_frequency, temperature, humidity, light_level):
-    adjustment = 0
-    if temperature > 30:
-        adjustment -= 1
-    elif temperature < 20:
-        adjustment += 1
-    if humidity < 40:
-        adjustment -= 1
-    elif humidity > 70:
-        adjustment += 1
-    if light_level > 80:
-        adjustment -= 1
-    elif light_level < 20:
-        adjustment += 1
-
-    return max(1, original_frequency + adjustment)
-
-
-class AIWateringPlanner:
-    def __init__(self, plant):
-        self.plant = plant
-
-    def generate_watering_plan(self, current_conditions, forecast):
-        print(
-            f"Current conditions: Temp: {current_conditions['temp_c']:.1f}°C, "
-            f"Humidity: {current_conditions['humidity']:.1f}%, "
-            f"Light: {current_conditions['light_level']:.1f}%"
+def process_forecast(forecast_data: Dict[str, Any]) -> List[DailyWeatherData]:
+    daily_data = {}
+    for item in forecast_data['list']:
+        dt = datetime.fromtimestamp(item['dt'])
+        date_str = dt.strftime('%Y-%m-%d')
+        hourly_data = HourlyWeatherData(
+                datetime=dt,
+                temp_c=item['main']['temp'],
+                humidity=item['main']['humidity'],
+                light_level=estimate_light_level(item['weather'][0]['description'])
         )
 
+        if date_str not in daily_data:
+            daily_data[date_str] = []
+        daily_data[date_str].append(hourly_data)
+
+    return [DailyWeatherData(date=date, hourly_data=data) for date, data in daily_data.items()]
+
+class AIWateringPlanner:
+    def __init__(self, plant: Plant):
+        self.plant = plant
+
+    @staticmethod
+    def calculate_water_amount(base_amount: int, temperature: float, humidity: float, light_level: int) -> int:
+        temp_factor = 1 + (temperature - 20) * 0.02  # 2% increase per degree above 20°C
+        humidity_factor = 1 + (50 - humidity) * 0.01  # 1% increase per percentage point below 50%
+        light_factor = 1 + (light_level - 50) * 0.005  # 0.5% increase per point above 50
+
+        adjusted_amount = base_amount * temp_factor * humidity_factor * light_factor
+        return max(round(adjusted_amount), base_amount // 2)  # Ensure at least half of base amount
+
+    @staticmethod
+    def adjust_frequency(original_frequency: int, temperature: float, humidity: float, light_level: int) -> int:
+        env_score = (
+                (temperature - 20) / 10 +  # Temperature impact
+                (50 - humidity) / 20 +     # Humidity impact
+                (light_level - 50) / 30    # Light impact
+        )
+
+        if env_score > 2:
+            return max(1, original_frequency - 1)  # Water more frequently
+        elif env_score < -2:
+            return original_frequency + 1  # Water less frequently
+        else:
+            return original_frequency  # No change
+
+    @staticmethod
+    def get_special_instructions(temperature: float, humidity: float, light_level: int) -> List[str]:
+        instructions = []
+        if temperature > 35:
+            instructions.append("Consider misting the leaves to cool the plant")
+        if humidity < 30:
+            instructions.append("Place a humidity tray near the plant")
+        if light_level > 90:
+            instructions.append("Provide some shade during peak sunlight hours")
+        if light_level < 10:
+            instructions.append("Consider supplemental grow lights")
+        return instructions
+
+    @staticmethod
+    def calculate_watering_score(hour_data: HourlyWeatherData) -> float:
+        # Lower score is better for watering
+        temp_score = abs(hour_data.temp_c - 20)  # Ideal temperature around 20°C
+        humidity_score = abs(hour_data.humidity - 60)  # Ideal humidity around 60%
+        light_score = abs(hour_data.light_level - 50)  # Moderate light level is ideal
+
+        return temp_score + humidity_score + light_score
+
+    def determine_optimal_hours(self, daily_data: DailyWeatherData, adjusted_frequency: int) -> List[HourlyWeatherData]:
+        sorted_hours = sorted(daily_data.hourly_data, key=self.calculate_watering_score)
+        return sorted_hours[:adjusted_frequency]
+
+    def generate_watering_plan(self, forecast: List[DailyWeatherData]) -> Dict[str, Any]:
         plan = {
-            "plant_name": self.plant.name,
-            "original_frequency": self.plant.water_frequency,
-            "daily_plans": [],
+                "plant_name": self.plant.name,
+                "original_frequency": self.plant.water_frequency,
+                "base_water_amount": self.plant.base_water_amount,
+                "daily_plans": []
         }
 
-        for day in range(3):
-            conditions = current_conditions if day == 0 else forecast[day - 1]
-            adjusted_frequency = _adjust_frequency(
-                self.plant.water_frequency,
-                conditions["temp_c"],
-                conditions["humidity"],
-                conditions["light_level"],
-            )
-            water_amount = _calculate_water_amount(
-                conditions["temp_c"], conditions["humidity"], conditions["light_level"]
-            )
-            best_time = _determine_best_time(
-                conditions["temp_c"], conditions["light_level"]
+        for daily_data in forecast:
+            avg_temp = sum(h.temp_c for h in daily_data.hourly_data) / len(daily_data.hourly_data)
+            avg_humidity = sum(h.humidity for h in daily_data.hourly_data) / len(daily_data.hourly_data)
+            avg_light = sum(h.light_level for h in daily_data.hourly_data) / len(daily_data.hourly_data)
+
+            adjusted_frequency = self.adjust_frequency(
+                    self.plant.water_frequency,
+                    avg_temp,
+                    avg_humidity,
+                    avg_light
             )
 
+            optimal_hours = self.determine_optimal_hours(daily_data, adjusted_frequency)
+            total_water_amount = self.calculate_water_amount(
+                    self.plant.base_water_amount,
+                    avg_temp,
+                    avg_humidity,
+                    avg_light
+            )
+
+            water_amount_per_session = total_water_amount // adjusted_frequency
+
             daily_plan = {
-                "date": conditions.get("date", "Today"),
-                "adjusted_frequency": adjusted_frequency,
-                "water_amount": water_amount,
-                "best_time": best_time,
-                "special_instructions": _get_special_instructions(
-                    conditions["temp_c"],
-                    conditions["humidity"],
-                    conditions["light_level"],
-                ),
+                    "date": daily_data.date,
+                    "adjusted_frequency": adjusted_frequency,
+                    "total_water_amount": total_water_amount,
+                    "watering_schedule": []
             }
+
+            for hour_data in optimal_hours:
+                special_instructions = self.get_special_instructions(
+                        hour_data.temp_c,
+                        hour_data.humidity,
+                        hour_data.light_level
+                )
+
+                description = f"Water with {water_amount_per_session} ml. "
+                if special_instructions:
+                    description += "Special instructions: " + "; ".join(special_instructions) + "."
+                else:
+                    description += "No special instructions."
+
+                watering_event = {
+                        "time": hour_data.datetime.strftime('%H:%M'),
+                        "description": description
+                }
+                daily_plan["watering_schedule"].append(watering_event)
+
             plan["daily_plans"].append(daily_plan)
 
         return plan
 
-
 def generate_detailed_watering_plan(
-    plant_name, water_frequency, latitude, longitude, api_key
-):
-    plant = Plant(plant_name, water_frequency)
+        plant_name: str,
+        water_frequency: int,
+        base_amount: int,
+        latitude: float,
+        longitude: float,
+        api_key: str
+) -> Dict[str, Any]:
+    plant = Plant(plant_name, water_frequency, base_amount)
     planner = AIWateringPlanner(plant)
     weather = WeatherForecast(api_key)
 
     forecast_data = weather.get_forecast(latitude, longitude)
     processed_forecast = process_forecast(forecast_data)
 
-    current_conditions = {
-        "temp_c": forecast_data["current"]["temp_c"],
-        "humidity": forecast_data["current"]["humidity"],
-        "light_level": _estimate_light_level(
-            forecast_data["current"]["condition"]["text"]
-        ),
-    }
-
-    watering_plan = planner.generate_watering_plan(
-        current_conditions, processed_forecast
-    )
-
-    print("\nDetailed Watering Plan:")
-    print(f"Plant: {watering_plan['plant_name']}")
-    print(
-        f"Original watering frequency: Every {watering_plan['original_frequency']} days"
-    )
-
-    for daily_plan in watering_plan["daily_plans"]:
-        print(f"\nDate: {daily_plan['date']}")
-        print(
-            f"Adjusted watering frequency: Every {daily_plan['adjusted_frequency']} days"
-        )
-        print(f"Recommended water amount: {daily_plan['water_amount']} ml")
-        print(f"Best time to water: {daily_plan['best_time']}")
-        print("Special instructions:")
-        for instruction in daily_plan["special_instructions"]:
-            print(f"  - {instruction}")
+    watering_plan = planner.generate_watering_plan(processed_forecast)
 
     return watering_plan

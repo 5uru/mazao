@@ -28,10 +28,11 @@ class Event(Base):
     name = Column(String, nullable=False)
     date = Column(String, nullable=False)
     type = Column(String)
+    description = Column(String)
     management_zone_id = Column(Integer, ForeignKey("management_zones.id"))
 
     def __repr__(self):
-        return f"<Event(name='{self.name}', date='{self.date}', type='{self.type}', management_zone_id={self.management_zone_id})>"
+        return f"<Event(name='{self.name}', date='{self.date}', type='{self.type}',  description='{self.description}' management_zone_id={self.management_zone_id})>"
 
 
 # Create an engine that stores data in the local directory's
@@ -93,11 +94,11 @@ def delete_management_zone(zone_id):
         session.close()
 
 
-def add_event(name, date, management_zone_id, event_type):
+def add_event(name, date, management_zone_id, event_type, description):
     session = Session()
     try:
         new_event = Event(
-            name=name, date=date, type=event_type, management_zone_id=management_zone_id
+            name=name, date=date, type=event_type, management_zone_id=management_zone_id, description=description
         )
         session.add(new_event)
         session.commit()
@@ -127,5 +128,26 @@ def get_events_by_zone(zone_id):
     except Exception as e:
         print(f"An error occurred while retrieving events: {e}")
         return []
+    finally:
+        session.close()
+
+def delete_all_zone_events(zone_id):
+    session = Session()
+    try:
+        session.query(Event).filter_by(management_zone_id=zone_id).delete()
+        session.commit()
+    except Exception as e:
+        print(f"An error occurred while deleting events: {e}")
+        session.rollback()
+    finally:
+        session.close()
+def delete_all_zone_events_by_type(zone_id, event_type):
+    session = Session()
+    try:
+        session.query(Event).filter_by(management_zone_id=zone_id, type=event_type).delete()
+        session.commit()
+    except Exception as e:
+        print(f"An error occurred while deleting events: {e}")
+        session.rollback()
     finally:
         session.close()
