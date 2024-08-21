@@ -55,7 +55,7 @@ class ImageClassificationBase(nn.Module):
     def training_step(self, batch):
         """
 
-        :param batch: 
+        :param batch:
 
         """
         images, labels = batch
@@ -65,7 +65,7 @@ class ImageClassificationBase(nn.Module):
     def validation_epoch_end(self, outputs):
         """
 
-        :param outputs: 
+        :param outputs:
 
         """
         batch_losses = [x["val_loss"] for x in outputs]
@@ -80,8 +80,8 @@ class ImageClassificationBase(nn.Module):
     def epoch_end(self, epoch, result):
         """
 
-        :param epoch: 
-        :param result: 
+        :param epoch:
+        :param result:
 
         """
         print(
@@ -102,8 +102,8 @@ class ImageClassificationBase(nn.Module):
 def ConvBlock(in_channels, out_channels, pool=False):
     """
 
-    :param in_channels: 
-    :param out_channels: 
+    :param in_channels:
+    :param out_channels:
     :param pool:  (Default value = False)
 
     """
@@ -138,7 +138,7 @@ class ResNet9(ImageClassificationBase):
     def forward(self, xb):  # xb is the loaded batch
         """
 
-        :param xb: 
+        :param xb:
 
         """
         out = self.conv1(xb)
@@ -154,9 +154,9 @@ class ResNet9(ImageClassificationBase):
 def load_model(model_class, path, num_classes):
     """
 
-    :param model_class: 
-    :param path: 
-    :param num_classes: 
+    :param model_class:
+    :param path:
+    :param num_classes:
 
     """
     # Determine the device
@@ -181,7 +181,7 @@ def load_model(model_class, path, num_classes):
 def predict(image_path):
     """
 
-    :param image_path: 
+    :param image_path:
 
     """
     model = load_model(ResNet9, PATH, NUM_CLASSES)

@@ -50,11 +50,11 @@ def get_zone_data(
 ):
     """
 
-    :param zone_id: int: 
-    :param zone_name: str: 
-    :param crop_type: str: 
-    :param longitude: float: 
-    :param latitude: float: 
+    :param zone_id: int:
+    :param zone_name: str:
+    :param crop_type: str:
+    :param longitude: float:
+    :param latitude: float:
 
     """
     return zone_id, zone_name, crop_type, longitude, latitude
@@ -64,7 +64,7 @@ def get_zone_data(
 def get_weather_data(city: str):
     """
 
-    :param city: str: 
+    :param city: str:
 
     """
     return get_weather(city)
