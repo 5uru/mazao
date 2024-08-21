@@ -7,9 +7,11 @@ from dotenv import load_dotenv
 from streamlit_calendar import calendar
 from streamlit_geolocation import streamlit_geolocation
 
-from app.db_managers import (add_event, add_management_zone,
-                             delete_all_zone_events_by_type,
-                             get_events_by_zone, get_management_zones)
+from app.db_managers import add_event
+from app.db_managers import add_management_zone
+from app.db_managers import delete_all_zone_events_by_type
+from app.db_managers import get_events_by_zone
+from app.db_managers import get_management_zones
 from app.predict_plant_disease import predict
 from app.watering import generate_detailed_watering_plan
 from app.weather import get_weather
