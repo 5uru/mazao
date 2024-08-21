@@ -5,7 +5,7 @@ from torchvision import transforms
 from PIL import Image
 
 NUM_CLASSES = 38
-PATH = "/models/plant-disease-model.pth"
+PATH = "/Users/jonathansuru/PycharmProjects/mazao/models/plant-disease-model.pth"
 
 CLASS_NAMES = [
     "Apple___Apple_scab",

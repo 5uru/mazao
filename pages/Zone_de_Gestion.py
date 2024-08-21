@@ -9,6 +9,8 @@ from app.db_managers import add_management_zone , get_management_zones , get_eve
 from app.watering import generate_detailed_watering_plan
 from app.weather import get_weather
 from streamlit_calendar import calendar
+from app.predict_plant_disease import predict
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -91,6 +93,29 @@ def add_new_event():
         add_event(name, datetime.datetime.combine(date, time), st.session_state.current_zone.id, event_type, description)
         st.rerun()
 
+@st.dialog("Analyser une image", width="large")
+def analyze_image():
+    if not (img_path := st.file_uploader("Sélectionnez une image")):
+        return
+    st.image(img_path, caption="Image sélectionnée", use_column_width=True)
+    if st.button("Analyser"):
+        disease = predict(img_path)
+        # Path to the JSON file
+        file_path = 'disease_treatment.json'
+
+        # Read the JSON file
+        with open(file_path, 'r', encoding='utf-8') as file:
+            disease_treatment = json.load(file)
+        disease_data = disease_treatment[disease]
+        if disease_data["type"] == "maladie":
+            st.error(f"Maladie détectée : {disease}")
+            st.write(f"*Agent pathogène:* {disease_data['agent_pathogene']}")
+            st.write("*Suggestion de traitement:*")
+            for traitement in disease_data["traitement"]:
+                st.write(f"- {traitement}")
+            st.write(f"*Suggestion traitement chimique:* {disease_data['suggestion_traitement_chimique']}")
+        else:
+            st.success("La plante est saine!")
 
 st.title("Weather App")
 
@@ -135,13 +160,13 @@ with col2:
                 add_new_event()
         with col_disease:
             if st.button("Analyser une image"):
-                st.write("### Analyse d'image")
+                analyze_image()
         calendar_events = []
         for event in get_events_by_zone(zone_id):
             event_date = datetime.datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S") if isinstance(event.date, str) else event.date
             calendar_events.append(
                     {
-                            "title": f" { event.name } :  {event.description}’",
+                            "title": f" { event.name } :  {event.description}",
                             "start": event_date.strftime("%Y-%m-%dT%H:%M:%S"),
                             "backgroundColor": event.type,
                     }
@@ -164,7 +189,7 @@ with col2:
         if st.session_state.watering_plan:
             st.write("### Plan d'arrosage")
             for plan in st.session_state.watering_plan["daily_plans"]:
-                delete_all_zone_events_by_type(zone_id, "Arrosage")
+                delete_all_zone_events_by_type(zone_id, "green")
                 date = datetime.datetime.strptime(plan["date"], "%Y-%m-%d")
                 for watering_event in plan["watering_schedule"]:
                     st.write(f"Arrosage {date.strftime('%Y-%m-%d')} {watering_event['time']}")
