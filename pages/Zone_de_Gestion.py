@@ -1,22 +1,18 @@
 import datetime
+import json
 import os
 
 import streamlit as st
 from dotenv import load_dotenv
+from streamlit_calendar import calendar
 from streamlit_geolocation import streamlit_geolocation
 
-from app.db_managers import (
-    add_management_zone,
-    get_management_zones,
-    get_events_by_zone,
-    add_event,
-    delete_all_zone_events_by_type,
-)
+from app.db_managers import (add_event, add_management_zone,
+                             delete_all_zone_events_by_type,
+                             get_events_by_zone, get_management_zones)
+from app.predict_plant_disease import predict
 from app.watering import generate_detailed_watering_plan
 from app.weather import get_weather
-from streamlit_calendar import calendar
-from app.predict_plant_disease import predict
-import json
 
 # Load environment variables from .env file
 load_dotenv()

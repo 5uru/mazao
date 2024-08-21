@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision import transforms
 from PIL import Image
+from torchvision import transforms
 
 NUM_CLASSES = 38
 PATH = "/Users/jonathansuru/PycharmProjects/mazao/models/plant-disease-model.pth"
