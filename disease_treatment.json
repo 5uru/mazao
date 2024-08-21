@@ -1,0 +1,179 @@
+{
+  "Corn_(maize)___Common_rust_": {
+    "nom": "Rouille commune du maïs",
+    "agent_pathogene": "Puccinia sorghi",
+    "traitement": [
+      "Utilisation de variétés résistantes",
+      "Semis précoce",
+      "Application de fongicides à base de triazoles ou de strobilurines"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide à base de tébuconazole ou d'azoxystrobine dès l'apparition des premiers symptômes. Répéter le traitement après 14 jours si nécessaire.",
+    "type": "maladie"
+  },
+  "Corn_(maize)___Northern_Leaf_Blight": {
+    "nom": "Helminthosporiose du maïs",
+    "agent_pathogene": "Exserohilum turcicum",
+    "traitement": [
+      "Rotation des cultures",
+      "Labour pour enfouir les résidus",
+      "Utilisation de variétés résistantes",
+      "Application de fongicides (strobilurines, triazoles ou leurs mélanges)"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide comme le propiconazole + trifloxystrobine au stade V4-V5 du maïs. Une deuxième application peut être nécessaire 2-3 semaines plus tard si la pression de la maladie est forte.",
+    "type": "maladie"
+  },
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+    "nom": "Cercosporiose du maïs",
+    "agent_pathogene": "Cercospora zeae-maydis",
+    "traitement": [
+      "Rotation des cultures",
+      "Labour pour enfouir les résidus",
+      "Utilisation de variétés résistantes",
+      "Application de fongicides"
+    ],
+    "suggestion_traitement_chimique": "Première application : Azoxystrobine + Propiconazole (1 L/ha) au stade 8-10 feuilles. Deuxième application : Pyraclostrobine + Metconazole (1-1.2 L/ha) 2-3 semaines plus tard si la maladie progresse.",
+    "type": "maladie"
+  },
+  "Tomato___Bacterial_spot": {
+    "nom": "Tache bactérienne de la tomate",
+    "agent_pathogene": "Xanthomonas campestris pv. vesicatoria",
+    "traitement": [
+      "Utilisation de semences et plants certifiés sains",
+      "Rotation des cultures",
+      "Éviter l'arrosage par aspersion"
+    ],
+    "suggestion_traitement_chimique": "Pulvérisation de produits à base de cuivre comme l'hydroxyde de cuivre ou l'oxychlorure de cuivre. Traiter tous les 7-10 jours en période à risque.",
+    "type": "maladie"
+  },
+  "Tomato___Early_blight": {
+    "nom": "Alternariose de la tomate",
+    "agent_pathogene": "Alternaria solani",
+    "traitement": [
+      "Rotation des cultures",
+      "Élimination des débris végétaux",
+      "Espacement adéquat des plants"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide à base de chlorothalonil ou de mancozèbe dès l'apparition des premiers symptômes. Répéter tous les 7-14 jours selon les conditions météorologiques.",
+    "type": "maladie"
+  },
+  "Tomato___Late_blight": {
+    "nom": "Mildiou de la tomate",
+    "agent_pathogene": "Phytophthora infestans",
+    "traitement": [
+      "Utilisation de variétés résistantes",
+      "Éviter l'arrosage par aspersion",
+      "Élimination des plants infectés"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide systémique comme le métalaxyl-M + mancozèbe en préventif. En cas d'infection, utiliser un produit à base de cymoxanil + cuivre tous les 5-7 jours.",
+    "type": "maladie"
+  },
+  "Tomato___Leaf_Mold": {
+    "nom": "Cladosporiose de la tomate",
+    "agent_pathogene": "Passalora fulva (anciennement Fulvia fulva)",
+    "traitement": [
+      "Amélioration de la ventilation des serres",
+      "Réduction de l'humidité",
+      "Utilisation de variétés résistantes"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide à base de difénoconazole ou de chlorothalonil dès l'apparition des premiers symptômes. Répéter le traitement tous les 7-14 jours si nécessaire.",
+    "type": "maladie"
+  },
+  "Tomato___Septoria_leaf_spot": {
+    "nom": "Septoriose de la tomate",
+    "agent_pathogene": "Septoria lycopersici",
+    "traitement": [
+      "Rotation des cultures",
+      "Élimination des débris végétaux",
+      "Paillage pour réduire les éclaboussures"
+    ],
+    "suggestion_traitement_chimique": "Utiliser un fongicide à base de chlorothalonil ou de mancozèbe. Commencer les traitements dès l'apparition des premiers symptômes et répéter tous les 7-10 jours.",
+    "type": "maladie"
+  },
+  "Tomato___Spider_mites Two-spotted_spider_mite": {
+    "nom": "Tétranyque à deux points",
+    "agent_pathogene": "Tetranychus urticae",
+    "traitement": [
+      "Maintien d'une bonne humidité",
+      "Introduction de prédateurs naturels",
+      "Utilisation de savons insecticides"
+    ],
+    "suggestion_traitement_chimique": "En cas d'infestation sévère, appliquer un acaricide spécifique comme l'abamectine ou le bifénazate. Répéter le traitement après 7 jours pour contrôler les nouvelles éclosions.",
+    "type": "ravageur"
+  },
+  "Tomato___Target_Spot": {
+    "nom": "Maladie des taches concentriques",
+    "agent_pathogene": "Corynespora cassiicola",
+    "traitement": [
+      "Rotation des cultures",
+      "Amélioration de la circulation de l'air",
+      "Élimination des débris végétaux"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide à base de azoxystrobine ou de difénoconazole. Traiter dès l'apparition des premiers symptômes et répéter tous les 7-14 jours selon les conditions météorologiques.",
+    "type": "maladie"
+  },
+  "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+    "nom": "Virus des feuilles jaunes en cuillère de la tomate",
+    "agent_pathogene": "Tomato yellow leaf curl virus (TYLCV)",
+    "traitement": [
+      "Utilisation de variétés résistantes",
+      "Contrôle des populations de mouches blanches (vecteur)",
+      "Élimination des plants infectés"
+    ],
+    "suggestion_traitement_chimique": "Il n'existe pas de traitement chimique direct contre le virus. La lutte chimique se concentre sur le contrôle du vecteur (mouches blanches) avec des insecticides systémiques comme l'imidaclopride ou le thiaméthoxame.",
+    "type": "maladie virale"
+  },
+  "Tomato___Tomato_mosaic_virus": {
+    "nom": "Virus de la mosaïque de la tomate",
+    "agent_pathogene": "Tomato mosaic virus (ToMV)",
+    "traitement": [
+      "Utilisation de semences et plants certifiés sains",
+      "Désinfection des outils de travail",
+      "Élimination des plants infectés"
+    ],
+    "suggestion_traitement_chimique": "Il n'existe pas de traitement chimique contre ce virus. La prévention est la meilleure approche. En cas d'infection, éliminer les plants atteints pour éviter la propagation.",
+    "type": "maladie"
+  },
+  "Pepper,_bell___healthy": {
+    "nom": "Poivron sain",
+    "type": "sain"
+  },
+  "Pepper,_bell___Bacterial_spot": {
+    "nom": "Tache bactérienne du poivron",
+    "agent_pathogene": "Xanthomonas campestris pv. vesicatoria",
+    "traitement": [
+      "Utilisation de semences et plants certifiés sains",
+      "Rotation des cultures sur 2-3 ans",
+      "Éviter l'arrosage par aspersion",
+      "Élimination des débris végétaux infectés",
+      "Amélioration de la circulation d'air entre les plants"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un traitement à base de cuivre (comme l'hydroxyde de cuivre) dès l'apparition des premiers symptômes. Répéter le traitement tous les 7-10 jours en période humide. Alterner avec un antibiotique agricole comme la streptomycine (si autorisé dans votre région) pour prévenir la résistance.",
+    "type": "maladie"
+  },
+  "Potato___Early_blight": {
+    "nom": "Alternariose de la pomme de terre",
+    "agent_pathogene": "Alternaria solani",
+    "traitement": [
+      "Rotation des cultures sur 3-4 ans",
+      "Utilisation de semences certifiées saines",
+      "Élimination des débris végétaux après la récolte",
+      "Irrigation adéquate pour éviter le stress hydrique",
+      "Maintien d'une fertilisation équilibrée"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide à base de chlorothalonil, de mancozèbe ou d'azoxystrobine dès l'apparition des premiers symptômes. Répéter le traitement tous les 7-14 jours selon les conditions météorologiques et la pression de la maladie.",
+    "type": "maladie"
+  },
+  "Potato___Late_blight": {
+    "nom": "Mildiou de la pomme de terre",
+    "agent_pathogene": "Phytophthora infestans",
+    "traitement": [
+      "Utilisation de variétés résistantes",
+      "Plantation de semences certifiées saines",
+      "Élimination des plants volontaires et des débris végétaux",
+      "Amélioration du drainage et de l'aération du champ",
+      "Surveillance régulière des conditions favorables au développement de la maladie"
+    ],
+    "suggestion_traitement_chimique": "Appliquer un fongicide systémique comme le métalaxyl-M + mancozèbe en préventif. En cas d'infection, utiliser un produit à base de cymoxanil + cuivre ou de fluazinam. Traiter tous les 5-7 jours en période à haut risque. Alterner les matières actives pour prévenir la résistance.",
+    "type": "maladie"
+  }
+}
